@@ -1,0 +1,4 @@
+python 06_Comp_IFlow.py -f f1 -r 1 && python 06_Comp_IFlow.py -f f2 -r 1 && python 06_Comp_IFlow.py -f f3 -r 1 && ^
+python 06_Comp_IFlow.py -f f1 -r 2 && python 06_Comp_IFlow.py -f f2 -r 2 && python 06_Comp_IFlow.py -f f3 -r 2 && ^
+python 06_Comp_IFlow.py -f f1 -r 3 && python 06_Comp_IFlow.py -f f2 -r 3 && python 06_Comp_IFlow.py -f f3 -r 3 && ^
+

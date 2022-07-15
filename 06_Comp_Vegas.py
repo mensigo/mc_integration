@@ -168,23 +168,24 @@ elif param_func == 'f3':
         8: 128 * (np.cos(35) - np.cos(45)) * np.sin(5) ** 7,
     }
 
-    integ_bounds = [0, 10]
+    integ_bounds = [0, 1]  # new normalized bounds, old are [0, 10]
+    integ_size = 10
 
     #@vegas.batchintegrand
     def f3_d2_np(x):
-       return np.sin(np.sum(x, axis=-1)) / dim2target_dict[2]
+       return np.sin(np.sum(x * integ_size, axis=-1)) * integ_size ** 2  / dim2target_dict[2]
 
     #@vegas.batchintegrand
     def f3_d4_np(x):
-       return np.sin(np.sum(x, axis=-1)) / dim2target_dict[4]
+       return np.sin(np.sum(x * integ_size, axis=-1)) * integ_size ** 4  / dim2target_dict[4]
 
     #@vegas.batchintegrand
     def f3_d6_np(x):
-       return np.sin(np.sum(x, axis=-1)) / dim2target_dict[6]
+       return np.sin(np.sum(x * integ_size, axis=-1)) * integ_size ** 6  / dim2target_dict[6]
 
     #@vegas.batchintegrand
     def f3_d8_np(x):
-       return np.sin(np.sum(x, axis=-1)) / dim2target_dict[8]
+       return np.sin(np.sum(x * integ_size, axis=-1)) * integ_size ** 8  / dim2target_dict[8]
 
     dim2func_dict = {
         2: f3_d2_np,
@@ -347,6 +348,8 @@ if __name__ == '__main__':
             temp_means = np.array(temp_means)
             temp_sdevs = np.array(temp_sdevs)
             temp_sum_evals = np.array(temp_sum_evals)
+            temp_foldername = os.path.join(*param_filename.split('/')[:-1])
+            os.makedirs(temp_foldername, exist_ok=True)
             np.save(param_filename+f'_d{ndims}_means_sdevs', np.stack([temp_means, temp_sdevs, temp_sum_evals]))
 
             w_mean, w_sdev = compute_variance_weighted_result(temp_means, temp_sdevs)
@@ -388,7 +391,7 @@ if __name__ == '__main__':
     # save
     temp_foldername = os.path.join(*param_filename.split('/')[:-1])
     os.makedirs(temp_foldername, exist_ok=True)
-    temp_df.to_csv(param_filename, index=False)
+    temp_df.to_csv(param_filename + '.csv', index=False)
 
     # display
     temp_df = temp_df[['func', 'ndim', 'nitn', 'neval',  # 'nitn_u', 

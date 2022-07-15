@@ -27,22 +27,21 @@ tf.autograph.set_verbosity(0)
 tf.keras.backend.set_floatx('float64')
 print(f'(is_gpu_available: {tf.test.is_gpu_available()})')
 
-# configflow.BINS_MAX = 1000  # changed from 50
-# configflow.ALPHA = 0.5  # changed from 1.5
-# configflow.BETA = 0.75  # Vegas+
-# configflow.TECH_CUT = 1e-8
+# These parameters are set manually in configflow.py :
 
-# # Events Limit limits how many events are done in one single run of the event_loop
-# configflow.MAX_EVENTS_LIMIT = int(1e6)
-# # Maximum number of evaluation per hypercube for VegasFlowPlus
-# configflow.MAX_NEVAL_HCUBE = int(1e6)  # changed from int(1e4)
+# BINS_MAX = 50
+# ALPHA = 0.5  # changed from 1.5 to = vegas default
+# BETA = 0.75  # Vegas+
+# TECH_CUT = 1e-8
 
-# # Select the list of devices to look for
-configflow.DEFAULT_ACTIVE_DEVICES = ['CPU']
+# Events Limit limits how many events are done in one single run of the event_loop
+# MAX_EVENTS_LIMIT = int(2e6)  # changed from int(1e6) to utilize RAM
+
+DEFAULT_ACTIVE_DEVICES = ['CPU']
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-f", '--func',  type=str, help="Function to integrate")
-parser.add_argument("-r", '--run_num', type=int, help="Run number", default=1)
+parser.add_argument('-f', '--func',  type=str, help="Function to integrate")
+parser.add_argument('-r', '--run_num', type=int, help="Run number", default=1)
 args = parser.parse_args()
 
 logger = logging.getLogger('my_logger')
@@ -308,7 +307,7 @@ if __name__ == '__main__':
             ndims,
             param_neval,
             verbose=False,
-            list_devices=configflow.DEFAULT_ACTIVE_DEVICES,
+            list_devices=DEFAULT_ACTIVE_DEVICES,
             )
         vegas_integ.compile(integrand, compilable=True)
         print(vegas_integ.devices)
@@ -382,7 +381,7 @@ if __name__ == '__main__':
     # save
     temp_foldername = os.path.join(*param_filename.split('/')[:-1])
     os.makedirs(temp_foldername, exist_ok=True)
-    temp_df.to_csv(param_filename, index=False)
+    temp_df.to_csv(param_filename + '.csv', index=False)
 
     # display
     temp_df = temp_df[['func', 'ndim', 'nitn', 'neval',  # 'nitn_u', 
